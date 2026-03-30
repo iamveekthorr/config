@@ -1,0 +1,124 @@
+local exclude_locs = { "node_modules", ".next", "dist", ".git" }
+local lockfiles = {
+  "yarn.lock",
+  "pnpm-lock.yaml",
+  "package-lock.json",
+}
+
+return {
+  "folke/snacks.nvim",
+  priority = 1000,
+  lazy = false,
+  opts = {
+    dashboard = { enabled = false }, -- Disable snacks dashboard
+    terminal = { enabled = true },
+    scroll = { enabled = false },
+    animate = { enabled = false },
+    explorer = {
+      replace_netrw = true,
+    },
+    picker = {
+      sources = {
+        explorer = {
+          auto_close = true,
+          layout = {
+            preview = true,
+            reverse = false,
+            layout = {
+              box = "horizontal",
+              backdrop = true,
+              width = 0.9,
+              height = 0.9,
+              border = "none",
+              {
+                box = "vertical",
+                {
+                  win = "input",
+                  height = 1,
+                  border = "rounded",
+                  title = "{title} {live} {flags}",
+                  title_pos = "center",
+                },
+                { win = "list", title = " Results ", title_pos = "center", border = "rounded" },
+              },
+              {
+                win = "preview",
+                title = "{preview:Preview}",
+                width = 0.65,
+                border = "rounded",
+                title_pos = "center",
+              },
+            },
+          },
+          win = {
+            list = {
+              wo = { relativenumber = true },
+            },
+          },
+        },
+      },
+      win = {
+        input = {
+          keys = {
+            ["<C-d>"] = { "preview_scroll_down", mode = { "i", "n" } },
+            ["<C-u>"] = { "preview_scroll_up", mode = { "i", "n" } },
+            ["<c-b>"] = "",
+            ["<c-f>"] = "",
+          },
+        },
+      },
+    },
+  },
+  keys = {
+    { "<leader>E", false },
+    {
+      "<leader>e",
+      function()
+        Snacks.explorer({ cwd = LazyVim.root() })
+      end,
+      desc = "Open explorer",
+    },
+    { "<leader>fe", false },
+    { "<leader>fE", false },
+    -- Snacks picker
+    { "<leader><space>", false },
+    { "<leader>/", false },
+    {
+      "<leader>fr",
+      function()
+        Snacks.picker.recent({ filter = { cwd = true, show_untracked = true } })
+      end,
+      desc = "Recent (cwd)",
+    },
+    { "<leader>ff", LazyVim.pick("files", { root = false, show_untracked = true }), desc = "Find Files (Root Dir)" },
+    {
+      "<leader>fF",
+      function()
+        Snacks.picker.files({ hidden = true, ignored = true, exclude = exclude_locs, show_empty = true })
+      end,
+      desc = "Find Files (cwd)",
+    },
+    {
+      "<leader>fR",
+      LazyVim.pick("oldfiles"),
+      desc = "Recent (All)",
+    },
+    {
+      "<leader>s<cr>",
+      function()
+        Snacks.picker.resume()
+      end,
+      desc = "Resume",
+    },
+    { "<leader>sg", LazyVim.pick("live_grep", { root = false }), desc = "Grep (Root Dir)" },
+    {
+      "<leader>sG",
+      function()
+        Snacks.picker.grep({ hidden = true, ignored = true, live = true, regex = true, exclude = exclude_locs })
+      end,
+      desc = "Grep (cwd)",
+    },
+    { "<leader>si", false },
+    { "<leader>sR", false },
+  },
+}

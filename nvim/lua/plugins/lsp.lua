@@ -1,0 +1,13 @@
+return {
+  "neovim/nvim-lspconfig",
+  opts = {
+    inlay_hints = {
+      enabled = false,
+    },
+    servers = {
+      nginx_language_server = {},
+      sqls = {},
+      nil_ls = false,
+    },
+  },
+}
