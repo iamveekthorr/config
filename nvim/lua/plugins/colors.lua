@@ -15,6 +15,8 @@ return {
     "catppuccin/nvim",
     name = "catppuccin",
     enabled = true,
+    priority = 1000,
+    lazy = false,
     config = function()
       require("catppuccin").setup({
         flavour = "auto", -- or latte, frappe, macchiato
@@ -29,7 +31,6 @@ return {
             style = nil,
           },
         },
-        float = { transparent = true, solid = true },
         styles = {
           comments = { "italic" },
           conditionals = { "italic" },
@@ -53,13 +54,21 @@ return {
         end,
       })
 
-      -- vim.cmd.colorscheme("catppuccin")
+      vim.cmd.colorscheme("catppuccin")
 
-      -- Additional transparency settings
-      -- vim.api.nvim_set_hl(0, "Normal", { bg = "NONE" })
-      -- vim.api.nvim_set_hl(0, "CursorLine", { bg = "NONE" })
-      -- vim.api.nvim_set_hl(0, "NormalFloat", { bg = "NONE" })
-      -- vim.api.nvim_set_hl(0, "Pmenu", { bg = "NONE" })
+      vim.api.nvim_create_autocmd("ColorScheme", {
+        pattern = "catppuccin*",
+        callback = function()
+          local groups = {
+            "Normal", "NormalNC", "NormalFloat", "FloatBorder",
+            "SignColumn", "LineNr", "CursorLineNr", "CursorLine",
+            "EndOfBuffer", "Pmenu", "WinSeparator",
+          }
+          for _, group in ipairs(groups) do
+            vim.api.nvim_set_hl(0, group, { bg = "NONE" })
+          end
+        end,
+      })
     end,
   },
 

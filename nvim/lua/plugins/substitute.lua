@@ -1,6 +1,7 @@
 return {
   "gbprod/substitute.nvim",
   event = "VeryLazy",
+  dependencies = { "gbprod/yanky.nvim" },
   config = function()
     local substitute = require("substitute")
     local wk = require("which-key")

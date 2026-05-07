@@ -205,44 +205,5 @@ return {
       end,
     })
 
-    -- Disable folding on alpha buffer and prevent interference
-    vim.api.nvim_create_autocmd("FileType", {
-      pattern = "alpha",
-      callback = function()
-        vim.opt_local.foldenable = false
-        vim.opt_local.signcolumn = "no"
-        vim.opt_local.number = false
-        vim.opt_local.relativenumber = false
-        vim.opt_local.cursorline = false
-      end,
-    })
-
-    -- Ensure alpha stays visible and prevent other plugins from opening
-    vim.api.nvim_create_autocmd("User", {
-      pattern = "AlphaReady",
-      callback = function()
-        -- Refresh quote when alpha is shown
-        dashboard.section.footer.val = get_random_quote()
-
-        -- Prevent LazyVim from opening other buffers when alpha is shown
-        vim.schedule(function()
-          vim.cmd("doautocmd User LazyDone") -- Mark lazy as done to prevent interference
-        end)
-      end,
-    })
-
-    -- Refresh dashboard content when it becomes visible
-    vim.api.nvim_create_autocmd("BufWinEnter", {
-      pattern = "*",
-      callback = function()
-        if vim.bo.filetype == "alpha" then
-          -- Refresh the dashboard content
-          vim.defer_fn(function()
-            dashboard.section.footer.val = get_random_quote()
-            alpha.setup(dashboard.config)
-          end, 50) -- Small delay to ensure proper refresh
-        end
-      end,
-    })
   end,
 }

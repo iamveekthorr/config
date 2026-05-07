@@ -4,13 +4,41 @@ return {
   config = function()
     local icons = LazyVim.config.icons
 
+    local git_user_cache = {}
+    local function get_git_user()
+      local cwd = vim.fn.getcwd()
+      if git_user_cache[cwd] ~= nil then
+        return git_user_cache[cwd]
+      end
+      if vim.fn.isdirectory(cwd .. "/.git") == 0 then
+        git_user_cache[cwd] = ""
+        return ""
+      end
+      local handle = io.popen("git config user.name 2>/dev/null")
+      if not handle then
+        git_user_cache[cwd] = ""
+        return ""
+      end
+      local name = handle:read("*l")
+      handle:close()
+      local result = (name and name ~= "") and string.format("%-25s", "  Git User - " .. name) or ""
+      git_user_cache[cwd] = result
+      return result
+    end
+
+    vim.api.nvim_create_autocmd("DirChanged", {
+      callback = function()
+        git_user_cache = {}
+      end,
+    })
+
     require("lualine").setup({
       options = {
         theme = "material-stealth",
         globalstatus = true, -- Single statusline like VSCode
         component_separators = { left = "", right = "" },
         section_separators = { left = "", right = "" },
-        disabled_filetypes = { statusline = { "dashboard", "alpha", "starter" } },
+        disabled_filetypes = { statusline = { "alpha", "dashboard", "starter" }, winbar = { "alpha", "dashboard", "starter" } },
       },
 
       sections = {
@@ -87,23 +115,7 @@ return {
         lualine_x = {
           {
             function()
-              -- Only show Git user if we're inside a Git repo
-              if vim.fn.isdirectory(".git") == 0 then
-                return ""
-              end
-
-              local handle = io.popen("git config user.name 2>/dev/null")
-              if not handle then
-                return ""
-              end
-
-              local name = handle:read("*l")
-              handle:close()
-
-              if name and name ~= "" then
-                return string.format("%-25s", "  Git User - " .. name) -- Git icon + username
-              end
-              return ""
+              return get_git_user()
             end,
             icon = nil,
             padding = { left = 2, right = 2 },

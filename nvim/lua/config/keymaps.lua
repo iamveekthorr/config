@@ -2,6 +2,9 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
+-- Exit terminal mode (lost when defaults.keymaps = false disables LazyVim defaults)
+vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+
 -- Search navigation with centering
 vim.keymap.set("n", "n", "nzzzv", { desc = "Jump to next matching item and center" })
 vim.keymap.set("n", "N", "Nzzzv", { desc = "Jump to previous matching item and center" })
