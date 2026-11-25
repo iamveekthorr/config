@@ -10,7 +10,107 @@ return {
   priority = 1000,
   lazy = false,
   opts = {
-    dashboard = { enabled = false }, -- Disable snacks dashboard
+    dashboard = {
+      enabled = false,
+      preset = {
+        header = [[
+███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗
+████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║
+██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║
+██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║
+██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║
+╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝
+
+          The hyperextensible Vim-based editor
+]],
+        keys = {
+          { icon = "󰈔 ", key = "e", desc = "New File", action = ":ene | startinsert" },
+          {
+            icon = "󰱼 ",
+            key = "f",
+            desc = "Find File",
+            action = function()
+              require("snacks").picker.files({ root = false })
+            end,
+          },
+          {
+            icon = " ",
+            key = "g",
+            desc = "Find Word",
+            action = function()
+              require("snacks").picker.grep({ root = false })
+            end,
+          },
+          {
+            icon = "󰔟 ",
+            key = "r",
+            desc = "Recent Files",
+            action = function()
+              require("snacks").picker.recent({ filter = { cwd = true } })
+            end,
+          },
+          {
+            icon = "󰙰 ",
+            key = "s",
+            desc = "Restore Session",
+            action = function()
+              require("persistence").load()
+            end,
+          },
+          {
+            icon = " ",
+            key = "x",
+            desc = "File Explorer",
+            action = function()
+              require("snacks").explorer({ cwd = LazyVim.root() })
+            end,
+          },
+          { icon = " ", key = "c", desc = "Configuration", action = ":edit $MYVIMRC" },
+          { icon = "󰈆 ", key = "q", desc = "Quit", action = ":qa" },
+        },
+      },
+      sections = {
+        { section = "header" },
+        { section = "keys", gap = 1, padding = 1 },
+        {
+          section = "terminal",
+          cmd = "fortune -s | cowsay",
+          height = 8,
+          padding = 1,
+          enabled = function()
+            -- Only show if fortune and cowsay are installed
+            return vim.fn.executable("fortune") == 1 and vim.fn.executable("cowsay") == 1
+          end,
+        },
+        function()
+          local quotes = {
+            "Code is like humor. When you have to explain it, it's bad. - Cory House",
+            "First, solve the problem. Then, write the code. - John Johnson",
+            "Experience is the name everyone gives to their mistakes. - Oscar Wilde",
+            "Knowledge is power. - Francis Bacon",
+            "Code never lies, comments sometimes do. - Ron Jeffries",
+            "Perfection is achieved not when there is nothing more to add, but rather when there is nothing more to take away. - Antoine de Saint-Exupery",
+            "If debugging is the process of removing software bugs, then programming must be the process of putting them in. - Edsger Dijkstra",
+            "Any fool can write code that a computer can understand. Good programmers write code that humans can understand. - Martin Fowler",
+            "Programs must be written for people to read, and only incidentally for machines to execute. - Harold Abelson",
+            "The best error message is the one that never shows up. - Thomas Fuchs",
+            "Simplicity is the ultimate sophistication. - Leonardo da Vinci",
+            "Make it work, make it right, make it fast. - Kent Beck",
+            "Clean code always looks like it was written by someone who cares. - Robert C. Martin",
+            "The only way to go fast is to go well. - Robert C. Martin",
+            "Documentation is a love letter that you write to your future self. - Damian Conway",
+            "Without further ado, let me be the Virgil to your Dante, and let me guide you safely through the world of rust programming. - Lukaz Hozda",
+            "Before me there were no created things, Only eterne, and I eternal last. All hope abandon, ye who enter in! - Dante's Inferno",
+            "I am unaware of a book that would make sense out of making sense - Unknown",
+            "Don't trust, verify! - Bitcoin",
+            "You could not live with your own failure. Where did that bring you? Back to me - Thanos",
+          }
+          math.randomseed(os.time())
+          local quote = quotes[math.random(#quotes)]:gsub("'", "'\\''") -- Escape single quotes for shell
+          return { section = "terminal", cmd = "echo '" .. quote .. "'", height = 2, padding = 1 }
+        end,
+      },
+    },
     terminal = { enabled = true },
     scroll = { enabled = false },
     animate = { enabled = false },

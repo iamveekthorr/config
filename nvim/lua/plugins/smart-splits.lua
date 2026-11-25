@@ -7,8 +7,8 @@ return {
     local wk = require("which-key")
 
     smartsplits.setup({
-      cursor_follows_swapped_bufs = true,
-      at_edge = "wrap",
+      move = { at_edge = "wrap" },
+      swap = { move_cursor = true },
     })
 
     -- Prevent splitting on alpha dashboard

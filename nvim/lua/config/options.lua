@@ -9,7 +9,8 @@ vim.opt.wrap = true
 vim.opt.linebreak = true
 
 vim.opt.showtabline = 0
-vim.opt.laststatus = 0
+vim.opt.laststatus = 3  -- Global statusline
+vim.g.lualine_laststatus = 3  -- Tell LazyVim to keep statusline visible
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4

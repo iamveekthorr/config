@@ -1,25 +1,16 @@
 return {
   "goolord/alpha-nvim",
+  enabled = true, -- Using snacks dashboard instead
   event = "VimEnter",
+  priority = 950, -- Load after colorscheme (1000) but before lualine (900)
   dependencies = { "nvim-tree/nvim-web-devicons" },
-  -- Disable LazyVim's alpha integration
-  enabled = function()
-    return not vim.g.lazyvim_alpha_disabled
-  end,
   config = function()
     local alpha = require("alpha")
     local dashboard = require("alpha.themes.dashboard")
 
-    -- Dynamic timing calculation based on system performance
+    -- Simple consistent delay for alpha display
     local function get_adaptive_delay()
-      local start_time = vim.fn.reltime()
-      -- Simple CPU-bound test to measure system responsiveness
-      for i = 1, 1000 do
-        local _ = math.sin(i)
-      end
-      local elapsed = vim.fn.reltimefloat(vim.fn.reltime(start_time))
-      -- Base delay of 100ms, add more if system is slow
-      return math.max(100, math.min(500, 100 + elapsed * 50000))
+      return 50 -- Fast, consistent, imperceptible delay
     end
 
     -- Set custom header with NEOVIM ASCII art
@@ -204,6 +195,5 @@ return {
         alpha_on_empty()
       end,
     })
-
   end,
 }

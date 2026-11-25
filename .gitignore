@@ -1,0 +1,29 @@
+# OS
+.DS_Store
+
+# Claude Code internal directories
+nvim/.claude/
+*/.claude/
+
+# Neovim scratch / generated
+nvim/graphify-out/
+nvim/Screenshot*
+
+# Zed caches, AI conversation data, and temp files
+zed/conversations/
+zed/embeddings/
+zed/prompts/
+zed/.tmp*
+
+# Ghostty runtime (sockets, AppSupport cache)
+ghostty/AppSupport/
+ghostty/sockets/
+
+# Tmux plugins — installed by bootstrap.sh via TPM, not tracked
+tmux/plugins/
+
+# Sensitive / machine-specific configs — manage separately
+neon/
+expressvpn/
+containers/
+mole/

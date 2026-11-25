@@ -50,25 +50,17 @@ return {
             Pmenu = { bg = "NONE" },
             PmenuSel = { bg = "NONE", fg = colors.pink },
             WinSeparator = { bg = "NONE" },
+            StatusLine = { bg = "NONE", fg = "NONE" },
+            StatusLineNC = { bg = "NONE", fg = "NONE" },
           }
         end,
       })
 
       vim.cmd.colorscheme("catppuccin")
 
-      vim.api.nvim_create_autocmd("ColorScheme", {
-        pattern = "catppuccin*",
-        callback = function()
-          local groups = {
-            "Normal", "NormalNC", "NormalFloat", "FloatBorder",
-            "SignColumn", "LineNr", "CursorLineNr", "CursorLine",
-            "EndOfBuffer", "Pmenu", "WinSeparator",
-          }
-          for _, group in ipairs(groups) do
-            vim.api.nvim_set_hl(0, group, { bg = "NONE" })
-          end
-        end,
-      })
+      -- Force StatusLine to be transparent (custom_highlights doesn't always work)
+      vim.api.nvim_set_hl(0, "StatusLine", { bg = "NONE", fg = "NONE" })
+      vim.api.nvim_set_hl(0, "StatusLineNC", { bg = "NONE", fg = "NONE" })
     end,
   },
 

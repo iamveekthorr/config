@@ -1,6 +1,16 @@
 return {
   "nvim-lualine/lualine.nvim",
-  dependencies = { "marko-cerovac/material.nvim" },
+  event = "UIEnter",
+  init = function()
+    -- Explicitly set lualine_laststatus to 3 to override LazyVim's default behavior
+    -- LazyVim's default sets laststatus = 0 on startup, then restores from this variable
+    -- By forcing this to 3, we ensure it always restores to global statusline
+    vim.g.lualine_laststatus = 3
+    -- Set a minimal statusline to prevent flicker during load
+    vim.o.statusline = " "
+  end,
+  -- Override LazyVim's default opts entirely
+  opts = {},
   config = function()
     local icons = LazyVim.config.icons
 
@@ -34,11 +44,14 @@ return {
 
     require("lualine").setup({
       options = {
-        theme = "material-stealth",
+        -- theme = "material-stealth",
         globalstatus = true, -- Single statusline like VSCode
         component_separators = { left = "", right = "" },
         section_separators = { left = "", right = "" },
-        disabled_filetypes = { statusline = { "alpha", "dashboard", "starter" }, winbar = { "alpha", "dashboard", "starter" } },
+        -- disabled_filetypes = {
+        --   statusline = { "alpha", "dashboard", "starter", "snacks_dashboard" },
+        --   winbar = { "alpha", "dashboard", "starter", "snacks_dashboard" },
+        -- },
       },
 
       sections = {
